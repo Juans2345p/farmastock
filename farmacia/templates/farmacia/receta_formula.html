@@ -266,6 +266,7 @@
             max-width: 330px;
             color: var(--gris);
             font-size: 12.5px;
+            overflow-wrap: anywhere;
         }
 
         .qr-id {
@@ -273,6 +274,22 @@
             color: var(--tinta) !important;
             font-size: 12px;
             font-weight: 600;
+        }
+
+        .qr-url {
+            display: inline-block;
+            max-width: 360px;
+            margin-top: 5px;
+            color: var(--verde-oscuro);
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.4;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+        }
+
+        .qr-url:hover {
+            text-decoration: underline;
         }
 
         .firma {
@@ -485,10 +502,12 @@
                 <div class="qr-texto">
                     <h2>Verificación digital</h2>
                     <p>
-                        Escanee el código para consultar el identificador único de esta
-                        fórmula médica.
+                        Escanee el código para abrir esta fórmula médica en línea.
                     </p>
-                    <p class="qr-id">Contenido del QR: {{ receta.id }}</p>
+                    <p class="qr-id">Receta #{{ receta.id }}</p>
+                    <a class="qr-url" href="{{ qr_url }}" target="_blank" rel="noopener">
+                        {{ qr_url }}
+                    </a>
                 </div>
             </section>
 

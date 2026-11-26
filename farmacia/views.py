@@ -3,7 +3,9 @@ import base64
 from io import BytesIO
 
 import qrcode
+from django.conf import settings
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from rest_framework import viewsets
 
 from .models import (
@@ -24,6 +26,19 @@ from .serializers import (
     RecetaSerializer,
     SedeSerializer,
 )
+
+
+def index(request):
+    """Portada sencilla del proyecto Farma."""
+    receta_ejemplo = Receta.objects.order_by("id").first()
+    contexto = {
+        "receta_ejemplo": receta_ejemplo.pk if receta_ejemplo else 1,
+        "total_medicos": Medico.objects.count(),
+        "total_pacientes": Paciente.objects.count(),
+        "total_medicamentos": Medicamento.objects.count(),
+        "total_recetas": Receta.objects.count(),
+    }
+    return render(request, "farmacia/index.html", contexto)
 
 
 class MedicoViewSet(viewsets.ModelViewSet):
@@ -67,13 +82,26 @@ class AlmacenViewSet(viewsets.ModelViewSet):
     serializer_class = AlmacenSerializer
 
 
-def _generar_qr_base64(contenido: str) -> str:
+def _url_publica_receta(request, receta) -> str:
     """
-    Genera un PNG con el código QR y lo devuelve codificado en Base64.
+    Construye la URL que se codifica en el QR.
 
-    El contenido debe ser únicamente el ID de la receta; la vista se encarga
-    de pasar `str(receta.id)`.
+    Si FARMA_PUBLIC_URL está definida, se usa esa base (útil para IP de la LAN
+    o dominio). Si está vacía, se usa el host con el que se abrió la página.
     """
+    ruta = reverse("receta-formula", args=[receta.pk])
+    base = getattr(settings, "FARMA_PUBLIC_URL", "").strip().rstrip("/")
+
+    if base:
+        if "://" not in base:
+            base = f"http://{base}"
+        return f"{base}{ruta}"
+
+    return request.build_absolute_uri(ruta)
+
+
+def _generar_qr_base64(contenido: str) -> str:
+    """Genera un PNG con el código QR y lo devuelve codificado en Base64."""
     qr = qrcode.QRCode(
         version=None,
         error_correction=qrcode.constants.ERROR_CORRECT_M,
@@ -98,9 +126,10 @@ def receta_formula(request, id):
         pk=id,
     )
 
+    qr_url = _url_publica_receta(request, receta)
     contexto = {
         "receta": receta,
-        # Regla estricta: el QR contiene SOLO el ID numérico, sin URL ni texto.
-        "qr_base64": _generar_qr_base64(str(receta.id)),
+        "qr_url": qr_url,
+        "qr_base64": _generar_qr_base64(qr_url),
     }
     return render(request, "farmacia/receta_formula.html", contexto)

@@ -4,6 +4,7 @@ Configuración de Django para el proyecto académico Farma.
 Entorno de desarrollo local con SQLite. No usar esta configuración tal cual
 en producción (SECRET_KEY expuesta, DEBUG activo y CORS completamente abierto).
 """
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,6 +15,14 @@ SECRET_KEY = "django-insecure-farma-academico-2026-cambiar-en-produccion"
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+
+# URL base pública que se codifica dentro del QR de cada receta.
+# Ejemplos:
+#   FARMA_PUBLIC_URL=http://192.168.1.50:8000
+#   FARMA_PUBLIC_URL=https://farmacia.midominio.com
+# Si se deja vacía, se usa el host con el que se abrió la página
+# (localhost, IP de la LAN, dominio, etc.).
+FARMA_PUBLIC_URL = os.environ.get("FARMA_PUBLIC_URL", "").strip().rstrip("/")
 
 INSTALLED_APPS = [
     "django.contrib.admin",

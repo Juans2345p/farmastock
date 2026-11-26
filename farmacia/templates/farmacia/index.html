@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farma · Inicio</title>
+    <style>
+        :root {
+            --verde: #0f766e;
+            --verde-oscuro: #115e59;
+            --tinta: #0f172a;
+            --gris: #64748b;
+            --linea: #e2e8f0;
+            --fondo: #eef4f3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background:
+                radial-gradient(circle at top left, #d9ece8 0, transparent 42%),
+                radial-gradient(circle at bottom right, #e3ebf2 0, transparent 45%),
+                var(--fondo);
+            color: var(--tinta);
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .tarjeta {
+            width: 100%;
+            max-width: 720px;
+            background: #ffffff;
+            border: 1px solid rgba(15, 118, 110, 0.12);
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16);
+            padding: 36px;
+        }
+
+        .cabecera {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .logo {
+            display: grid;
+            width: 54px;
+            height: 54px;
+            place-items: center;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--verde-oscuro), var(--verde));
+            color: #ffffff;
+        }
+
+        .titulo {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .subtitulo {
+            color: var(--gris);
+            font-size: 14px;
+            margin-bottom: 26px;
+        }
+
+        .descripcion {
+            color: var(--tinta);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .acciones {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 26px;
+        }
+
+        .accion {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 16px;
+            border: 1px solid var(--linea);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--tinta);
+            background: #ffffff;
+            transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .accion:hover {
+            transform: translateY(-2px);
+            border-color: var(--verde);
+            box-shadow: 0 8px 20px rgba(15, 118, 110, 0.12);
+        }
+
+        .accion strong {
+            color: var(--verde-oscuro);
+            font-size: 14px;
+        }
+
+        .accion span {
+            color: var(--gris);
+            font-size: 12px;
+        }
+
+        .estadisticas {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--linea);
+        }
+
+        .estadistica {
+            text-align: center;
+        }
+
+        .estadistica strong {
+            display: block;
+            font-size: 22px;
+            color: var(--verde-oscuro);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .estadistica span {
+            color: var(--gris);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .pie {
+            margin-top: 20px;
+            color: #94a3b8;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        @media (max-width: 620px) {
+            .tarjeta {
+                padding: 24px;
+            }
+
+            .acciones {
+                grid-template-columns: 1fr;
+            }
+
+            .estadisticas {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="tarjeta">
+        <header class="cabecera">
+            <div class="logo" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                    <path d="M10 2h4v8h8v4h-8v8h-4v-8H2v-4h8V2z"/>
+                </svg>
+            </div>
+            <h1 class="titulo">Farma</h1>
+        </header>
+
+        <p class="subtitulo">Gestión de fórmulas médicas, inventario y API REST</p>
+
+        <p class="descripcion">
+            Proyecto académico con Django, Django REST Framework y SQLite.
+            Usa los accesos rápidos para administrar los datos, consultar la API
+            o ver la fórmula con código QR.
+        </p>
+
+        <nav class="acciones" aria-label="Accesos rápidos">
+            <a class="accion" href="/admin/">
+                <strong>Administración</strong>
+                <span>Crear y editar datos</span>
+            </a>
+            <a class="accion" href="/api/">
+                <strong>API REST</strong>
+                <span>Endpoints CRUD</span>
+            </a>
+            <a class="accion" href="/receta/{{ receta_ejemplo }}/">
+                <strong>Fórmula de ejemplo</strong>
+                <span>Ver QR y capturar</span>
+            </a>
+        </nav>
+
+        <section class="estadisticas" aria-label="Resumen">
+            <div class="estadistica">
+                <strong>{{ total_medicos }}</strong>
+                <span>Médicos</span>
+            </div>
+            <div class="estadistica">
+                <strong>{{ total_pacientes }}</strong>
+                <span>Pacientes</span>
+            </div>
+            <div class="estadistica">
+                <strong>{{ total_medicamentos }}</strong>
+                <span>Medicamentos</span>
+            </div>
+            <div class="estadistica">
+                <strong>{{ total_recetas }}</strong>
+                <span>Recetas</span>
+            </div>
+        </section>
+
+        <p class="pie">
+            Desarrollo local · admin / admin123 ·
+            <a href="/admin/">abrir admin</a>
+        </p>
+    </main>
+</body>
+</html>

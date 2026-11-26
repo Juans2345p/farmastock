@@ -21,6 +21,18 @@ python iniciar.py
 `iniciar.py` aplica migraciones, crea el superusuario, carga datos de prueba y
 levanta el servidor en <http://127.0.0.1:8000/>.
 
+### Cambiar la URL del QR o exponer el servidor en la LAN
+
+```bash
+# Escanear desde un celular en la misma red (sustituye por tu IP)
+FARMA_HOST=0.0.0.0 \
+FARMA_PUBLIC_URL="http://192.168.1.50:8000" \
+python iniciar.py
+
+# Dominio público
+FARMA_PUBLIC_URL="https://farmacia.midominio.com" python iniciar.py
+```
+
 También se puede arrancar de forma manual:
 
 ```bash
@@ -74,12 +86,30 @@ Ejemplo de respuesta de `/api/recetas/`:
 }
 ```
 
-## Código QR
+## Código QR y URL pública
 
 El QR se genera con `qrcode` en `farmacia/views.py` y se envía al template como
-Base64. Su contenido es **solo** `str(receta.id)`: sin URL, sin prefijo y sin
-texto adicional. La imagen se muestra en el HTML con
-`data:image/png;base64,...`.
+Base64. Codifica la URL pública de la fórmula (`.../receta/<id>/`), no solo el
+ID. La imagen se muestra en el HTML con `data:image/png;base64,...`.
+
+La URL base se configura con la variable de entorno `FARMA_PUBLIC_URL`:
+
+```bash
+# IP de la LAN
+FARMA_PUBLIC_URL="http://192.168.1.50:8000" python iniciar.py
+
+# Dominio
+FARMA_PUBLIC_URL="https://farmacia.midominio.com" python iniciar.py
+```
+
+Si `FARMA_PUBLIC_URL` está vacía, se usa el host con el que se abrió la página
+(`localhost`, la IP de la LAN o el dominio). Si el valor no incluye esquema, se
+antepone `http://`.
+
+Para escanear desde un celular, el QR no debe apuntar a `127.0.0.1` (en el
+celular eso es el propio teléfono): usa la IP de la LAN o un dominio, y arranca
+el servidor con `FARMA_HOST=0.0.0.0`. Si hay un proxy inverso con HTTPS, define
+`FARMA_PUBLIC_URL` con el dominio público.
 
 ## Estructura
 

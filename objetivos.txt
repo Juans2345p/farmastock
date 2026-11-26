@@ -46,13 +46,16 @@ Entorno local de desarrollo (sin requisitos de producción).
 [ ] Diseñar la vista como tarjeta/comprobante limpio, ideal para captura de pantalla o impresión.
 [ ] Incluir estilos de impresión (@media print) y un botón para imprimir o guardar como PDF.
 
-5. REGLA ESTRICTA DEL CÓDIGO QR
--------------------------------
+5. CÓDIGO QR CON URL PÚBLICA CONFIGURABLE
+-----------------------------------------
 [ ] Generar el QR en Python con la librería qrcode.
-[ ] Codificar ÚNICAMENTE el ID numérico de la receta (ejemplo: 1, 2, 15).
-[ ] No incluir URLs, rutas, texto adicional ni prefijos dentro del QR.
+[ ] Codificar la URL pública que abre la vista de la fórmula: /receta/<id>/.
+[ ] Permitir configurar la URL base con FARMA_PUBLIC_URL (localhost, IP de la LAN o dominio).
+[ ] Si FARMA_PUBLIC_URL está vacía, construir la URL con el host de la petición.
+[ ] Soportar http/https y bases con o sin esquema.
 [ ] Convertir la imagen PNG a Base64 y pasarla al template.
 [ ] Mostrar la imagen en el HTML mediante un data URI (data:image/png;base64,...).
+[ ] Mostrar la URL codificada como texto y enlace en la fórmula.
 
 6. API REST CON DJANGO REST FRAMEWORK
 -------------------------------------
@@ -92,7 +95,8 @@ Entorno local de desarrollo (sin requisitos de producción).
 [ ] Iniciar sesión en /admin/ con admin / admin123.
 [ ] Crear una receta con varios medicamentos desde el Admin usando el inline.
 [ ] Abrir /receta/<id>/ y comprobar los datos y el QR.
-[ ] Escanear el QR y verificar que su contenido es exactamente el ID de la receta.
+[ ] Escanear el QR y verificar que abre la fórmula correcta con la URL configurada.
+[ ] Probar el QR con localhost, con la IP de la LAN y con un dominio.
 [ ] Consumir /api/recetas/ y comprobar el arreglo anidado "medicamentos".
 [ ] Probar un frontend local en otro puerto y confirmar que CORS no bloquea las peticiones.
 [ ] Confirmar que las tablas y columnas de SQLite coinciden con el esquema entregado.

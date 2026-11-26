@@ -10,6 +10,7 @@ from .views import (
     RecetaMedicamentoViewSet,
     RecetaViewSet,
     SedeViewSet,
+    index,
     receta_formula,
 )
 
@@ -25,6 +26,7 @@ router.register(
 router.register("almacen", AlmacenViewSet, basename="almacen")
 
 urlpatterns = [
+    path("", index, name="index"),
     path("api/", include(router.urls)),
     path("receta/<int:id>/", receta_formula, name="receta-formula"),
 ]

@@ -193,15 +193,25 @@ def cargar_datos_prueba() -> None:
 
 
 def iniciar_servidor() -> None:
+    host = os.environ.get("FARMA_HOST", "127.0.0.1").strip() or "127.0.0.1"
+    port = os.environ.get("FARMA_PORT", "8000").strip() or "8000"
+    display_host = "127.0.0.1" if host in ("0.0.0.0", "::") else host
+    base = f"http://{display_host}:{port}"
+    public_url = os.environ.get("FARMA_PUBLIC_URL", "").strip().rstrip("/")
+
     print("=" * 64)
     print(" Farma · servidor de desarrollo")
-    print(" Admin:   http://127.0.0.1:8000/admin/   (admin / admin123)")
-    print(" API:     http://127.0.0.1:8000/api/")
-    print(" Fórmula: http://127.0.0.1:8000/receta/1/")
+    print(f" Admin:   {base}/admin/   (admin / admin123)")
+    print(f" API:     {base}/api/")
+    print(f" Fórmula: {base}/receta/1/")
+    if public_url:
+        print(f" QR base: {public_url}")
+    if host in ("0.0.0.0", "::"):
+        print(" Escuchando en todas las interfaces; usa la IP de tu equipo para la LAN.")
     print("=" * 64)
     try:
         subprocess.run(
-            [sys.executable, str(BASE_DIR / "manage.py"), "runserver", "127.0.0.1:8000"],
+            [sys.executable, str(BASE_DIR / "manage.py"), "runserver", f"{host}:{port}"],
             cwd=BASE_DIR,
             check=False,
         )
