@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórmula médica #{{ receta.id }}</title>
+    <style>
+        :root {
+            --verde: #0f766e;
+            --verde-oscuro: #115e59;
+            --tinta: #0f172a;
+            --gris: #64748b;
+            --gris-claro: #f1f5f9;
+            --linea: #e2e8f0;
+            --fondo: #eef4f3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 16px 64px;
+            background:
+                radial-gradient(circle at top left, #d9ece8 0, transparent 42%),
+                radial-gradient(circle at bottom right, #e3ebf2 0, transparent 45%),
+                var(--fondo);
+            color: var(--tinta);
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        .receta {
+            width: 100%;
+            max-width: 760px;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid rgba(15, 118, 110, 0.12);
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16);
+        }
+
+        /* ---------- Cabecera ---------- */
+        .cabecera {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 26px 36px;
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--verde-oscuro), var(--verde));
+        }
+
+        .logo {
+            display: grid;
+            flex: 0 0 auto;
+            width: 54px;
+            height: 54px;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        .marca {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            opacity: 0.85;
+        }
+
+        .cabecera h1 {
+            margin-top: 2px;
+            font-size: 25px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .folio {
+            margin-left: auto;
+            padding: 10px 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .folio span {
+            display: block;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .folio strong {
+            display: block;
+            font-size: 22px;
+            line-height: 1.2;
+        }
+
+        /* ---------- Cuerpo ---------- */
+        .cuerpo {
+            padding: 30px 36px 34px;
+        }
+
+        .datos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 28px;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--linea);
+        }
+
+        .dato .etiqueta {
+            display: block;
+            margin-bottom: 3px;
+            color: var(--gris);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .dato .valor {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--tinta);
+            overflow-wrap: anywhere;
+        }
+
+        .seccion-titulo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 26px 0 12px;
+        }
+
+        .seccion-titulo h2 {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--verde-oscuro);
+        }
+
+        .contador {
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: #ecfdf5;
+            color: var(--verde-oscuro);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead th {
+            padding: 9px 10px;
+            background: var(--gris-claro);
+            color: var(--gris);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-align: left;
+            text-transform: uppercase;
+        }
+
+        thead th:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        thead th:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        tbody td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #edf2f7;
+            vertical-align: top;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .num {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .indice {
+            width: 34px;
+            color: var(--gris);
+            font-size: 12px;
+        }
+
+        .medicamento {
+            font-weight: 600;
+        }
+
+        .tipo {
+            color: var(--gris);
+            font-size: 13px;
+        }
+
+        .cantidad {
+            font-weight: 700;
+            color: var(--verde-oscuro);
+        }
+
+        .vacio {
+            padding: 22px;
+            text-align: center;
+            color: var(--gris);
+            font-size: 13px;
+        }
+
+        /* ---------- Pie con QR ---------- */
+        .pie {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-top: 26px;
+            padding-top: 22px;
+            border-top: 1px dashed var(--linea);
+        }
+
+        .qr-caja {
+            flex: 0 0 auto;
+            padding: 9px;
+            border: 1px solid var(--linea);
+            border-radius: 14px;
+            background: #ffffff;
+        }
+
+        .qr-caja img {
+            display: block;
+            width: 132px;
+            height: 132px;
+        }
+
+        .qr-texto h2 {
+            margin-bottom: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--verde-oscuro);
+        }
+
+        .qr-texto p {
+            max-width: 330px;
+            color: var(--gris);
+            font-size: 12.5px;
+        }
+
+        .qr-id {
+            margin-top: 7px;
+            color: var(--tinta) !important;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .firma {
+            margin-top: 34px;
+            text-align: center;
+        }
+
+        .firma-linea {
+            width: 260px;
+            max-width: 100%;
+            margin: 0 auto 7px;
+            border-top: 1px solid #94a3b8;
+        }
+
+        .firma p {
+            color: var(--gris);
+            font-size: 11px;
+        }
+
+        .nota {
+            margin-top: 22px;
+            color: #94a3b8;
+            font-size: 10.5px;
+            text-align: center;
+        }
+
+        /* ---------- Botón flotante ---------- */
+        .boton-imprimir {
+            position: fixed;
+            top: 22px;
+            right: 22px;
+            padding: 11px 18px;
+            border: none;
+            border-radius: 999px;
+            background: var(--verde-oscuro);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(15, 94, 89, 0.28);
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+
+        .boton-imprimir:hover {
+            background: #0b4f4a;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 620px) {
+            body {
+                padding: 16px 10px 40px;
+            }
+
+            .cabecera {
+                flex-wrap: wrap;
+                padding: 22px;
+            }
+
+            .folio {
+                margin-left: 0;
+            }
+
+            .cuerpo {
+                padding: 22px;
+            }
+
+            .datos {
+                grid-template-columns: 1fr;
+            }
+
+            .pie {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .boton-imprimir {
+                position: static;
+                width: calc(100% - 20px);
+                margin: 10px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            thead th:nth-child(3),
+            tbody td:nth-child(3) {
+                display: none;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 12mm;
+            }
+
+            body {
+                display: block;
+                padding: 0;
+                background: #ffffff;
+            }
+
+            .receta {
+                max-width: none;
+                width: 100%;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .boton-imprimir {
+                display: none;
+            }
+
+            .cabecera,
+            thead th {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .cuerpo {
+                padding: 26px 30px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button type="button" class="boton-imprimir" onclick="window.print()">
+        Imprimir / Guardar PDF
+    </button>
+
+    <article class="receta">
+        <header class="cabecera">
+            <div class="logo" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                    <path d="M10 2h4v8h8v4h-8v8h-4v-8H2v-4h8V2z"/>
+                </svg>
+            </div>
+            <div>
+                <p class="marca">Farmacia Central</p>
+                <h1>Fórmula médica</h1>
+            </div>
+            <div class="folio">
+                <span>Receta</span>
+                <strong>#{{ receta.id }}</strong>
+            </div>
+        </header>
+
+        <div class="cuerpo">
+            <section class="datos" aria-label="Datos de la receta">
+                <div class="dato">
+                    <span class="etiqueta">Médico</span>
+                    <span class="valor">{{ receta.medico.nombre }}</span>
+                </div>
+                <div class="dato">
+                    <span class="etiqueta">Paciente</span>
+                    <span class="valor">{{ receta.paciente.nombre }}</span>
+                </div>
+                <div class="dato">
+                    <span class="etiqueta">Fecha de emisión</span>
+                    <span class="valor">{{ receta.fecha|date:"d/m/Y" }}</span>
+                </div>
+                <div class="dato">
+                    <span class="etiqueta">Identificador</span>
+                    <span class="valor">Receta #{{ receta.id }}</span>
+                </div>
+            </section>
+
+            <div class="seccion-titulo">
+                <h2>Medicamentos prescritos</h2>
+                <span class="contador">{{ receta.detalles.count }} ítem{{ receta.detalles.count|pluralize:"s" }}</span>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col" class="indice">#</th>
+                        <th scope="col">Medicamento</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col" class="num">Gramos</th>
+                        <th scope="col" class="num">Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detalle in receta.detalles.all %}
+                        <tr>
+                            <td class="indice">{{ forloop.counter|stringformat:"02d" }}</td>
+                            <td class="medicamento">{{ detalle.medicamento.nombre }}</td>
+                            <td class="tipo">{{ detalle.medicamento.tipo }}</td>
+                            <td class="num">{{ detalle.medicamento.gramos|floatformat:"-2" }} g</td>
+                            <td class="num cantidad">{{ detalle.cantidad }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="vacio">
+                                Esta receta todavía no tiene medicamentos registrados.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <section class="pie">
+                <div class="qr-caja">
+                    <img src="data:image/png;base64,{{ qr_base64 }}"
+                         alt="Código QR de la receta {{ receta.id }}"
+                         width="132" height="132">
+                </div>
+                <div class="qr-texto">
+                    <h2>Verificación digital</h2>
+                    <p>
+                        Escanee el código para consultar el identificador único de esta
+                        fórmula médica.
+                    </p>
+                    <p class="qr-id">Contenido del QR: {{ receta.id }}</p>
+                </div>
+            </section>
+
+            <div class="firma">
+                <div class="firma-linea"></div>
+                <p>Firma y sello del médico</p>
+            </div>
+
+            <p class="nota">
+                Documento generado automáticamente por el sistema Farma · Receta #{{ receta.id }}
+            </p>
+        </div>
+    </article>
+</body>
+</html>

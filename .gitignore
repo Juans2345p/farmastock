@@ -1,0 +1,48 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+ENV/
+
+# Bytecode / caches de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+
+# Base de datos local (SQLite) y archivos auxiliares
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+
+# Archivos de entorno / secretos
+.env
+.env.local
+*.env
+
+# Archivos estáticos recolectados
+staticfiles/
+static_root/
+media/
+
+# Logs
+*.log
+logs/
+
+# Archivos de sistema / editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Herramientas
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+```

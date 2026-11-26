@@ -1,0 +1,98 @@
+PROYECTO FARMA — OBJETIVOS Y REQUERIMIENTOS
+===========================================
+Proyecto académico con Django + Django REST Framework + SQLite.
+Entorno local de desarrollo (sin requisitos de producción).
+
+1. BASE DE DATOS (SQLite)
+-------------------------
+[ ] Usar SQLite como motor de base de datos local (db.sqlite3).
+[ ] Crear la tabla MEDICO con id (PK autoincremental) y nombre (TEXT NOT NULL).
+[ ] Crear la tabla PACIENTE con id (PK autoincremental) y nombre (TEXT NOT NULL).
+[ ] Crear la tabla MEDICAMENTO con id (PK autoincremental), nombre (TEXT), tipo (TEXT) y gramos (REAL NOT NULL).
+[ ] Crear la tabla SEDES con id (PK autoincremental), nombre (TEXT NOT NULL UNIQUE) y direccion (TEXT NOT NULL).
+[ ] Crear la tabla RECETA con id (PK autoincremental), medico_id (FK a MEDICO), paciente_id (FK a PACIENTE) y fecha (TEXT NOT NULL).
+[ ] Crear la tabla RECETA_MEDICAMENTO con id (PK autoincremental), receta_id (FK a RECETA), medicamento_id (FK a MEDICAMENTO) y cantidad (INTEGER NOT NULL).
+[ ] Crear la tabla ALMACEN con id (PK autoincremental), sede_id (FK a SEDES), medicamento_id (FK a MEDICAMENTO) y cajas (INTEGER NOT NULL).
+[ ] Respetar los nombres exactos de las tablas usando Meta.db_table.
+[ ] Respetar los tipos de columna del esquema (TEXT, REAL, INTEGER, PK INTEGER AUTOINCREMENT).
+[ ] Generar y aplicar las migraciones de Django.
+
+2. DEPENDENCIAS Y ARCHIVOS DEL PROYECTO
+---------------------------------------
+[ ] Crear requirements.txt con django, djangorestframework, django-cors-headers, qrcode y pillow en versiones estables.
+[ ] Crear objetivos.txt con todos los requerimientos en formato checklist.
+[ ] Crear el archivo de arranque iniciar.py.
+[ ] Configurar el proyecto Django y la aplicación farmacia.
+[ ] Documentar la estructura de carpetas y los comandos de ejecución.
+
+3. GESTIÓN VISUAL WEB (DJANGO ADMIN)
+------------------------------------
+[ ] Registrar los modelos MEDICO, PACIENTE, MEDICAMENTO, SEDES, RECETA, RECETA_MEDICAMENTO y ALMACEN en el Admin.
+[ ] Permitir crear, consultar, editar y eliminar todos los registros desde la web.
+[ ] Usar un TabularInline de RECETA_MEDICAMENTO dentro de RECETA para agregar medicamentos fácilmente.
+[ ] Permitir buscar y filtrar registros en el Admin (nombre, tipo, fecha, sede, etc.).
+[ ] Mostrar en el listado de recetas un enlace directo a la vista de la fórmula.
+[ ] Crear el superusuario admin / admin123 desde el script de arranque.
+
+4. VISTA HTML DE LA FÓRMULA MÉDICA
+----------------------------------
+[ ] Crear la ruta /receta/<int:id>/ accesible desde el navegador.
+[ ] Mostrar el ID de la receta de forma visible.
+[ ] Mostrar el nombre del médico.
+[ ] Mostrar el nombre del paciente.
+[ ] Mostrar la fecha de emisión.
+[ ] Mostrar una tabla con los medicamentos recetados: nombre, tipo, gramos y cantidad.
+[ ] Mostrar al final una imagen de código QR.
+[ ] Diseñar la vista como tarjeta/comprobante limpio, ideal para captura de pantalla o impresión.
+[ ] Incluir estilos de impresión (@media print) y un botón para imprimir o guardar como PDF.
+
+5. REGLA ESTRICTA DEL CÓDIGO QR
+-------------------------------
+[ ] Generar el QR en Python con la librería qrcode.
+[ ] Codificar ÚNICAMENTE el ID numérico de la receta (ejemplo: 1, 2, 15).
+[ ] No incluir URLs, rutas, texto adicional ni prefijos dentro del QR.
+[ ] Convertir la imagen PNG a Base64 y pasarla al template.
+[ ] Mostrar la imagen en el HTML mediante un data URI (data:image/png;base64,...).
+
+6. API REST CON DJANGO REST FRAMEWORK
+-------------------------------------
+[ ] Implementar ViewSets con ModelViewSet para todas las entidades.
+[ ] Configurar un DefaultRouter de DRF.
+[ ] Exponer /api/medicos/ con CRUD completo.
+[ ] Exponer /api/pacientes/ con CRUD completo.
+[ ] Exponer /api/medicamentos/ con CRUD completo.
+[ ] Exponer /api/sedes/ con CRUD completo.
+[ ] Exponer /api/recetas/ con CRUD completo.
+[ ] Exponer /api/receta-medicamentos/ con CRUD completo.
+[ ] Exponer /api/almacen/ con CRUD completo.
+[ ] Incluir en el serializer de RECETA el detalle anidado de sus medicamentos.
+[ ] Incluir nombres descriptivos (médico, paciente, medicamento, sede) en las respuestas JSON.
+[ ] Configurar CORS_ALLOW_ALL_ORIGINS = True para permitir cualquier frontend local.
+[ ] Verificar que la API raíz /api/ liste todos los endpoints disponibles.
+
+7. INICIALIZACIÓN AUTOMÁTICA
+-----------------------------
+[ ] Crear iniciar.py como único punto de entrada del proyecto.
+[ ] Verificar e instalar automáticamente las dependencias si faltan.
+[ ] Aplicar las migraciones automáticamente (migrate).
+[ ] Crear el superusuario admin / admin123 solo si no existe.
+[ ] Cargar médicos de prueba si no existen.
+[ ] Cargar pacientes de prueba si no existen.
+[ ] Cargar medicamentos de prueba si no existen.
+[ ] Cargar sedes de prueba si no existen.
+[ ] Cargar inventario (ALMACEN) de prueba si no existe.
+[ ] Cargar al menos una receta completa con sus medicamentos.
+[ ] Evitar duplicar datos al ejecutar el script más de una vez (idempotencia).
+[ ] Levantar el servidor de desarrollo al finalizar (runserver).
+[ ] Mostrar en consola las URLs de admin, API y fórmula.
+
+8. VERIFICACIÓN Y ACEPTACIÓN
+-----------------------------
+[ ] Ejecutar python iniciar.py desde una instalación limpia y comprobar que todo funciona.
+[ ] Iniciar sesión en /admin/ con admin / admin123.
+[ ] Crear una receta con varios medicamentos desde el Admin usando el inline.
+[ ] Abrir /receta/<id>/ y comprobar los datos y el QR.
+[ ] Escanear el QR y verificar que su contenido es exactamente el ID de la receta.
+[ ] Consumir /api/recetas/ y comprobar el arreglo anidado "medicamentos".
+[ ] Probar un frontend local en otro puerto y confirmar que CORS no bloquea las peticiones.
+[ ] Confirmar que las tablas y columnas de SQLite coinciden con el esquema entregado.
